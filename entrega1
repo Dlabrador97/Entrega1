@@ -1,0 +1,115 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Random;
+import java.util.Scanner;
+
+// Main class to generate pseudo-random input files for sellers, products, and sales.
+// All parameters are provided by the user via console input, including seller IDs.
+//Author: daniel rincon
+
+public class GenerateInfoFil {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.println("Enter number of sellers: ");
+            int sellerCount = scanner.nextInt();
+
+            System.out.println("Enter number of products: ");
+            int productCount = scanner.nextInt();
+
+            System.out.println("Enter number of sales per seller: ");
+            int salesPerSeller = scanner.nextInt();
+            scanner.nextLine(); 
+
+            String[] names = new String[sellerCount];
+            String[] surnames = new String[sellerCount];
+            long[] ids = new long[sellerCount];
+
+            for (int i = 0; i < sellerCount; i++) {
+                System.out.println("Enter ID for seller " + (i + 1) + ": ");
+                ids[i] = scanner.nextLong();
+                scanner.nextLine(); 
+
+                System.out.println("Enter name for seller " + (i + 1) + ": ");
+                names[i] = scanner.nextLine();
+
+                System.out.println("Enter surname for seller " + (i + 1) + ": ");
+                surnames[i] = scanner.nextLine();
+            }
+
+            createSalesManInfoFile(sellerCount, names, surnames, ids);
+            createProductsFile(productCount, scanner);
+
+            for (int i = 0; i < sellerCount; i++) {
+                String documentType = "CC";
+                createSalesMenFile(salesPerSeller, documentType, ids[i], names[i], surnames[i], productCount);
+            }
+
+            System.out.println("Files generated successfully.");
+        } catch (Exception e) {
+            System.err.println("Error generating files: " + e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
+
+    
+    // Generates the seller information file with user-provided names, surnames, and IDs.
+    // @param sellerCount Number of sellers
+    // @param names Array of seller names
+    // @param surnames Array of seller surnames
+    // @param ids Array of seller document IDs
+    // @throws IOException If file write fails
+    
+    public static void createSalesManInfoFile(int sellerCount, String[] names, String[] surnames, long[] ids) throws IOException {
+        try (FileWriter writer = new FileWriter("sellers.txt")) {
+            for (int i = 0; i < sellerCount; i++) {
+                String type = "CC";
+                writer.write(type + ";" + ids[i] + ";" + names[i] + ";" + surnames[i] + "\n");
+            }
+        }
+    }
+
+    
+    //  Generates the product information file with user-provided names and pseudo-random prices.
+    //  @param productsCount Number of products
+    //  @param scanner Input scanner for reading product names
+    //  @throws IOException If file write fails
+    
+    public static void createProductsFile(int productsCount, Scanner scanner) throws IOException {
+        Random random = new Random();
+        try (FileWriter writer = new FileWriter("products.txt")) {
+            for (int i = 0; i < productsCount; i++) {
+                System.out.println("Enter name for product " + (i + 1) + ": ");
+                String productName = scanner.nextLine();
+                int price = 1000 + random.nextInt(99000);
+                writer.write("P" + i + ";" + productName + ";" + price + "\n");
+            }
+        }
+    }
+
+     // Generates the sales file for one seller with pseudo-random sales.
+     // @param salesCount Number of sales records for the seller
+     // @param documentType Type of seller's document
+     // @param id Seller's document number
+     // @param name Seller's name
+     // @param surname Seller's surname
+     // @param productCount Number of products available
+     // @throws IOException If file write fails
+     
+    public static void createSalesMenFile(int salesCount, String documentType, long id,
+                                          String name, String surname, int productCount) throws IOException {
+        Random random = new Random();
+        String filename = "sales_" + id + ".txt";
+        try (FileWriter writer = new FileWriter(filename)) {
+            writer.write(documentType + ";" + id + "\n");
+            for (int i = 0; i < salesCount; i++) {
+                int productId = random.nextInt(productCount);
+                int quantity = 1 + random.nextInt(20);
+                writer.write("P" + productId + ";" + quantity + ";\n");
+            }
+        }
+    }
+}
