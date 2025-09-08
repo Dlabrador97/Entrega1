@@ -1,0 +1,3 @@
+TipoDocumento;ID;Nombre;Apellido
+CC;1;Nury;Guilombo
+CC;2;Juanita;Londono

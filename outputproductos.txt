@@ -1,0 +1,4 @@
+Codigo;Nombre;Precio
+P0;Televisor Samsumg 55";22009
+P1;Celular Samsung A55;83235
+P2;Mouse ergonomico;91594

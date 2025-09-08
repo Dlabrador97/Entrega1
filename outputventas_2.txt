@@ -1,0 +1,5 @@
+TipoDocumento;ID
+CC;2
+CodigoProducto;CantidadVendida;
+P2;16;
+P0;1;
